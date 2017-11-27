@@ -1,0 +1,11 @@
+[Unit]
+Description=Bind Keys
+
+[Service]
+User=pi
+Type=forking
+ExecStart=/path/to/bind-keys
+WorkingDirectory=/path/to/c
+
+[Install]
+WantedBy=multi-user.target

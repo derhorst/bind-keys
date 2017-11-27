@@ -1,3 +1,9 @@
+# config file
+bind-keys.cfg
+
+#dolphin files
+.directory
+
 # Prerequisites
 *.d
 

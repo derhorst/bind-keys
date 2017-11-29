@@ -96,7 +96,7 @@ int read_input(const char *keyboard, config_setting_t *key_binds) {
 }
 
 int get_action(struct input_event *keys, config_setting_t *key_binds) {
-  /* Output a list of all movies in the inventory. */
+  /* Get all key-binds */
   if(key_binds != NULL) {
     unsigned int count = config_setting_length(key_binds);
     unsigned int i,j;
@@ -231,7 +231,24 @@ int read_config() {
 }
 
 void execute_command(const char *command) {
-  system(command);
+  /* double fork to avoid zombie processes */
+  pid_t pid1;
+  pid_t pid2;
+  int status;
+
+  if ((pid1 = fork())) {
+    /* parent process */
+    waitpid(pid1, &status, WSTOPPED);
+  } else if (!pid1) {
+    /* child process */
+    if ((pid2 = fork())) {
+      exit(0);
+    } else if (!pid2) {
+      /* child process B */
+      system(command);
+      exit(0);
+    }
+  }
 }
 
 void* wait_to_exec(void *ptr) {
